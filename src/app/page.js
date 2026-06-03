@@ -1,4 +1,4 @@
-import Navbar from './components/landing-page/Navbar';
+import Navbar from './components/Navbar';
 import HeroSection from './components/landing-page/HeroSection';
 import PromiseSection from './components/landing-page/PromiseSection';
 import WhySection from './components/landing-page/WhySection';
@@ -8,7 +8,7 @@ import TestimonialsSection from './components/landing-page/TestimonialsSection';
 import FAQSection from './components/landing-page/FAQSection';
 import RestaurantSection from './components/landing-page/RestaurantSection';
 import DownloadSection from './components/landing-page/DownloadSection';
-import Footer from './components/landing-page/Footer';
+import Footer from './components/Footer';
 
 export default function HomePage() {
   return (
