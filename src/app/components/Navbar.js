@@ -8,6 +8,7 @@ const links = [
   { label: 'How It Works', href: '#how' },
   { label: 'Our Story', href: '#story' },
   { label: 'Restaurants', href: '#restaurants' },
+  { label: 'Blog', href: '#blog' },
   { label: 'Contact', href: '#contact' },
 ];
 
