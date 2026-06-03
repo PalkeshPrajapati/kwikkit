@@ -109,7 +109,7 @@ export default function Footer() {
           padding: '24px 0', flexWrap: 'wrap', gap: '12px',
         }}>
           <p style={{ fontSize: '13px', color: 'rgba(253,248,242,0.2)' }}>
-            © {year} Kwikkit · Made with ❤️ in Chandigarh
+            Kwikkit - © {year} . Aushadhiya Foods Pvt. Ltd. All rights reserved.  ·  FSSAI Licensed  ·  info@kwikkit.in  ·  +91 86995 55046
           </p>
           <span style={{ fontSize: '12px', color: 'rgba(253,248,242,0.15)', fontWeight: '500' }}>
             Honest food delivery since 2024
