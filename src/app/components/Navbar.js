@@ -4,12 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const links = [
-  { label: 'Why Kwikkit', href: '#why' },
-  { label: 'How It Works', href: '#how' },
-  { label: 'Our Story', href: '#story' },
-  { label: 'Restaurants', href: '#restaurants' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Why Kwikkit', href: '/why-kwikkit' },
+  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'Our Story', href: '/story' },
+  { label: 'Restaurants', href: '/restaurants' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {
@@ -88,7 +88,7 @@ export default function Navbar() {
 
           {/* ── Right: CTA + hamburger ── */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <a href="#download"
+            <Link href="/download"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '7px',
                 background: 'var(--yellow)', color: 'var(--green-dark)',
@@ -103,7 +103,7 @@ export default function Navbar() {
             >
               Download
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 3v13M5 13l7 7 7-7" /></svg>
-            </a>
+            </Link>
 
             {/* hamburger */}
             <button
