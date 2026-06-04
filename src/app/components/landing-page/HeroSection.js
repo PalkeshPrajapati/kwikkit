@@ -7,16 +7,16 @@ const stats = [
   { val: '4.8★', label: 'Rating' },
   { val: '200+', label: 'Restaurants' },
   { val: '500+', label: 'Orders / Day' },
-  { val: '₹0',   label: 'Platform Fee' },
+  { val: '₹0', label: 'Platform Fee' },
 ];
 
 const ticker = [
-  { icon: Ban,               label: 'No Delivery Surge'          },
-  { icon: Star,              label: '4.8 Star Rating'             },
-  { icon: Package,           label: '500+ Orders Daily'           },
-  { icon: Handshake,         label: '200+ Restaurant Partners'    },
-  { icon: BadgeIndianRupee,  label: '₹0 Platform Fee'             },
-  { icon: MapPin,            label: 'Chandigarh Tricity'          },
+  { icon: Ban, label: 'No Delivery Surge' },
+  { icon: Star, label: '4.8 Star Rating' },
+  { icon: Package, label: '500+ Orders Daily' },
+  { icon: Handshake, label: '200+ Restaurant Partners' },
+  { icon: BadgeIndianRupee, label: '₹0 Platform Fee' },
+  { icon: MapPin, label: 'Chandigarh Tricity' },
 ];
 
 export default function HeroSection() {
@@ -39,7 +39,7 @@ export default function HeroSection() {
       {/* ── Background image ── */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <Image
-          src="/hero-bg.png"
+          src="/herobg/home-herobg.png"
           alt="Kwikkit food delivery app"
           fill
           priority
@@ -74,18 +74,9 @@ export default function HeroSection() {
       </div>
 
       {/* ── Hero content — bottom-left aligned ── */}
-      <div style={{
-        position: 'relative', zIndex: 1,
-        flex: 1,
-        display: 'flex',
-        alignItems: 'flex-end',          /* anchor to bottom */
-        paddingTop: '120px',
-        paddingBottom: '52px',
-        paddingLeft: 'max(28px, calc((100vw - 1240px) / 2 + 28px))',
-        paddingRight: 'max(28px, calc((100vw - 1240px) / 2 + 28px))',
-      }}>
+      <div className="hero-content-container">
         {/* Text block — left half only */}
-        <div style={{ width: '100%', maxWidth: '520px' }}>
+        <div className="hero-text-block">
 
           {/* Live pill */}
           <div style={{
@@ -113,7 +104,7 @@ export default function HeroSection() {
           <h1 style={{
             fontFamily: "'Syne', sans-serif",
             fontWeight: '800',
-            fontSize: 'clamp(38px, 5.5vw, 72px)',
+            fontSize: 'clamp(28px, 5.5vw, 72px)',
             lineHeight: '1.0',
             letterSpacing: '-0.035em',
             color: 'var(--cream)',
@@ -149,7 +140,7 @@ export default function HeroSection() {
           </p>
 
           {/* CTA buttons */}
-          <div style={{
+          <div className="hero-cta-row" style={{
             display: 'flex', flexWrap: 'wrap', gap: '12px',
             marginBottom: '40px',
             opacity: loaded ? 1 : 0,
@@ -253,6 +244,41 @@ export default function HeroSection() {
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
         @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.2} }
         .dot-blink { animation: blinkDot 1.6s ease infinite; }
+
+        .hero-content-container {
+          position: relative;
+          z-index: 1;
+          flex: 1;
+          display: flex;
+          align-items: flex-end;
+          padding-top: 120px;
+          padding-bottom: 52px;
+          padding-left: max(28px, calc((100vw - 1240px) / 2 + 28px));
+          padding-right: max(28px, calc((100vw - 1240px) / 2 + 28px));
+        }
+        .hero-text-block {
+          width: 100%;
+          max-width: 520px;
+        }
+
+        @media (max-width: 768px) {
+          .hero-content-container {
+            align-items: center !important;
+            justify-content: center !important;
+            padding-top: 140px !important;
+            padding-bottom: 80px !important;
+          }
+          .hero-text-block {
+            max-width: 100% !important;
+            text-align: center !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          .hero-cta-row {
+            justify-content: center !important;
+          }
+        }
       `}</style>
     </section>
   );

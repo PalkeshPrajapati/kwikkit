@@ -1,14 +1,15 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Ban, ClipboardList, MapPin, Sparkles, Radio, Handshake } from 'lucide-react';
 
 const features = [
-  { num:'01', Icon: Ban,           title:'No Surprise Charges',   desc:'No hidden platform markups. What you see at checkout is exactly what you pay.' },
-  { num:'02', Icon: ClipboardList, title:'No Menu Markups',        desc:'Restaurant menu prices are never touched. Zero inflation, ever.' },
-  { num:'03', Icon: MapPin,        title:'Built for Chandigarh',   desc:'Hyper-local focus. We know the Tricity and we built Kwikkit specifically for it.' },
-  { num:'04', Icon: Sparkles,      title:'Easy Ordering',           desc:'Minimal, clean ordering flow. No dark patterns, no confusion.' },
-  { num:'05', Icon: Radio,         title:'Real-Time Tracking',     desc:'Watch your order move live from kitchen to your doorstep.' },
-  { num:'06', Icon: Handshake,     title:'Fair for Restaurants',   desc:'Zero commission model. Local restaurants keep every rupee they earn.' },
+  { num:'01', Icon: Ban,           title:'No Surprise Charges',   desc:'No hidden platform markups. What you see at checkout is exactly what you pay.', bgImage: '/landing/why-no-charges.png' },
+  { num:'02', Icon: ClipboardList, title:'No Menu Markups',        desc:'Restaurant menu prices are never touched. Zero inflation, ever.', bgImage: '/landing/why-no-markups.png' },
+  { num:'03', Icon: MapPin,        title:'Built for Chandigarh',   desc:'Hyper-local focus. We know the Tricity and we built Kwikkit specifically for it.', bgImage: '/landing/why-chandigarh.png' },
+  { num:'04', Icon: Sparkles,      title:'Easy Ordering',           desc:'Minimal, clean ordering flow. No dark patterns, no confusion.', bgImage: '/landing/why-easy-order.png' },
+  { num:'05', Icon: Radio,         title:'Real-Time Tracking',     desc:'Watch your order move live from kitchen to your doorstep.', bgImage: '/landing/why-tracking.png' },
+  { num:'06', Icon: Handshake,     title:'Fair for Restaurants',   desc:'Zero commission model. Local restaurants keep every rupee they earn.', bgImage: '/landing/why-fair.png' },
 ];
 
 export default function WhySection() {
@@ -46,41 +47,86 @@ export default function WhySection() {
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'20px' }}>
           {features.map((f, i) => (
             <div key={f.num} className="reveal-scale" style={{ transitionDelay:`${i * 75}ms` }}>
-              <div className="surface-card" style={{ padding:'36px 32px', height:'100%', cursor:'default' }}>
-                {/* top row */}
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'22px' }}>
+              <div className="surface-card" style={{
+                padding:'36px 32px',
+                height:'100%',
+                cursor:'default',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+              onMouseEnter={e => {
+                const img = e.currentTarget.querySelector('.card-bg-img');
+                if (img) {
+                  img.style.transform = 'scale(1.08)';
+                  img.style.opacity = '0.45';
+                }
+              }}
+              onMouseLeave={e => {
+                const img = e.currentTarget.querySelector('.card-bg-img');
+                if (img) {
+                  img.style.transform = 'scale(1)';
+                  img.style.opacity = '0.24';
+                }
+              }}>
+                {/* Absolute background image layer */}
+                <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+                  <Image
+                    className="card-bg-img"
+                    src={f.bgImage}
+                    alt={f.title}
+                    fill
+                    style={{
+                      objectFit: 'cover',
+                      objectPosition: 'center center',
+                      opacity: '0.24',
+                      transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease',
+                    }}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                   <div style={{
-                    width:'52px', height:'52px', borderRadius:'14px',
-                    background:'linear-gradient(135deg, rgba(0,95,87,0.1) 0%, rgba(0,95,87,0.05) 100%)',
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                    transition:'transform 0.3s ease',
-                    border: '1px solid rgba(0,95,87,0.12)',
-                  }}
-                  onMouseEnter={e=>e.currentTarget.style.transform='rotate(-6deg) scale(1.1)'}
-                  onMouseLeave={e=>e.currentTarget.style.transform=''}>
-                    <f.Icon size={22} strokeWidth={1.8} color="var(--green)" />
-                  </div>
-                  <span style={{
-                    fontFamily:"'Syne',sans-serif", fontWeight:'900',
-                    fontSize:'52px', color:'rgba(0,95,87,0.06)', lineHeight:'1',
-                  }}>{f.num}</span>
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to bottom, rgba(255,255,255,0) 20%, rgba(255,255,255,0.45) 100%)',
+                  }} />
                 </div>
 
-                {/* accent line */}
-                <div style={{
-                  width:'32px', height:'3px', borderRadius:'2px',
-                  background:'linear-gradient(90deg, var(--green) 0%, var(--green-light) 100%)',
-                  marginBottom:'16px',
-                  transition:'width 0.4s ease',
-                }}/>
+                {/* Content layer */}
+                <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  {/* top row */}
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'22px' }}>
+                    <div style={{
+                      width:'52px', height:'52px', borderRadius:'14px',
+                      background:'linear-gradient(135deg, rgba(0,95,87,0.1) 0%, rgba(0,95,87,0.05) 100%)',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      transition:'transform 0.3s ease',
+                      border: '1px solid rgba(0,95,87,0.12)',
+                    }}
+                    onMouseEnter={e=>e.currentTarget.style.transform='rotate(-6deg) scale(1.1)'}
+                    onMouseLeave={e=>e.currentTarget.style.transform=''}>
+                      <f.Icon size={22} strokeWidth={1.8} color="var(--green)" />
+                    </div>
+                    <span style={{
+                      fontFamily:"'Syne',sans-serif", fontWeight:'900',
+                      fontSize:'52px', color:'rgba(0,95,87,0.06)', lineHeight:'1',
+                    }}>{f.num}</span>
+                  </div>
 
-                <h3 style={{
-                  fontFamily:"'Syne',sans-serif", fontWeight:'700',
-                  fontSize:'19px', letterSpacing:'-0.02em',
-                  color:'var(--text-primary)', marginBottom:'10px',
-                }}>{f.title}</h3>
+                  {/* accent line */}
+                  <div style={{
+                    width:'32px', height:'3px', borderRadius:'2px',
+                    background:'linear-gradient(90deg, var(--green) 0%, var(--green-light) 100%)',
+                    marginBottom:'16px',
+                    transition:'width 0.4s ease',
+                  }}/>
 
-                <p style={{ fontSize:'15px', lineHeight:'1.65', color:'var(--text-muted)' }}>{f.desc}</p>
+                  <h3 style={{
+                    fontFamily:"'Syne',sans-serif", fontWeight:'700',
+                    fontSize:'19px', letterSpacing:'-0.02em',
+                    color:'var(--text-primary)', marginBottom:'10px',
+                  }}>{f.title}</h3>
+
+                  <p style={{ fontSize:'15px', lineHeight:'1.65', color:'var(--text-muted)' }}>{f.desc}</p>
+                </div>
               </div>
             </div>
           ))}

@@ -18,8 +18,8 @@ export default function HowHero() {
   });
 
   const tabs = [
-    { id: 'customers',   label: '↓ For Customers',   href: '#customer'   },
-    { id: 'restaurants', label: '↓ For Restaurants',  href: '#restaurant' },
+    { id: 'customers', label: '↓ For Customers', href: '#customer' },
+    { id: 'restaurants', label: '↓ For Restaurants', href: '#restaurant' },
   ];
 
   return (
@@ -28,14 +28,14 @@ export default function HowHero() {
       {/* ── Background ── */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <Image
-          src="/hero-bg.png"
+          src="/herobg/how-herobg.png"
           alt=""
           fill priority
           sizes="100vw"
           style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
         />
         {/* heavy dark overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(3,11,10,0.93)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(3,11,10,0.8)' }} />
         {/* grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)', backgroundSize: '64px 64px', pointerEvents: 'none' }} />
         {/* green glow bloom */}
@@ -54,7 +54,7 @@ export default function HowHero() {
         </div>
 
         {/* Heading */}
-        <h1 style={{ ...anim(0.15), fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(40px, 6.5vw, 80px)', lineHeight: '1.0', letterSpacing: '-0.035em', color: 'var(--cream)', marginBottom: '24px' }}>
+        <h1 style={{ ...anim(0.15), fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(28px, 6.5vw, 80px)', lineHeight: '1.0', letterSpacing: '-0.035em', color: 'var(--cream)', marginBottom: '24px' }}>
           Ordering food should<br />
           be{' '}
           <span style={{ background: 'linear-gradient(90deg, var(--yellow) 0%, #fffab0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>

@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 export default function DownloadSection() {
   const ref = useRef(null);
@@ -30,27 +31,46 @@ export default function DownloadSection() {
           position: 'relative', overflow: 'hidden',
           textAlign: 'center',
         }}>
+          {/* ── Background Image ── */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+            <Image
+              src="/landing/download-bg.png"
+              alt="Friends dining and sharing food together"
+              fill
+              style={{ objectFit: 'cover', objectPosition: 'center center' }}
+              sizes="100vw"
+            />
+            {/* Dark green overlay for readability */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(135deg, rgba(0, 61, 55, 0.85) 0%, rgba(0, 40, 36, 0.78) 100%)',
+            }} />
+          </div>
+
           {/* card orbs */}
           <div style={{
             position: 'absolute', top: '-60px', right: '-60px',
             width: '300px', height: '300px', borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(255,229,0,0.1) 0%, transparent 65%)',
             pointerEvents: 'none',
+            zIndex: 1,
           }} />
           <div style={{
             position: 'absolute', bottom: '-80px', left: '-80px',
             width: '350px', height: '350px', borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(0,122,110,0.3) 0%, transparent 65%)',
             pointerEvents: 'none',
+            zIndex: 1,
           }} />
           {/* grid */}
           <div style={{
             position: 'absolute', inset: 0,
             backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)',
             backgroundSize: '50px 50px', pointerEvents: 'none',
+            zIndex: 1,
           }} />
 
-          <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ position: 'relative', zIndex: 2 }}>
             <span className="reveal tag tag-green-dark" style={{ marginBottom: '24px' }}>Available Now</span>
 
             <h2 className="reveal heading-display heading-lg" style={{ color: 'var(--cream)', marginBottom: '18px' }}>

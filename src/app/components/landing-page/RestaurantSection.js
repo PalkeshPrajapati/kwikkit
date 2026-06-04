@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { BadgeIndianRupee, Receipt, Zap } from 'lucide-react';
 
 const benefits = [
@@ -31,21 +32,39 @@ export default function RestaurantSection() {
       padding: '110px 0',
       position: 'relative', overflow: 'hidden',
     }}>
+      {/* ── Background Image ── */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <Image
+          src="/landing/restaurant-bg.png"
+          alt="Professional restaurant kitchen"
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'center center' }}
+          sizes="100vw"
+        />
+        {/* Dark overlay for readability */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to right, rgba(14, 26, 25, 0.88) 0%, rgba(14, 26, 25, 0.75) 45%, rgba(14, 26, 25, 0.82) 80%, rgba(14, 26, 25, 0.90) 100%)',
+        }} />
+      </div>
+
       {/* gradient orbs */}
       <div style={{
         position:'absolute', top:'-20%', right:'-10%',
         width:'600px', height:'600px', borderRadius:'50%',
         background:'radial-gradient(circle, rgba(255,229,0,0.06) 0%, transparent 65%)',
         pointerEvents:'none',
+        zIndex: 1,
       }}/>
       <div style={{
         position:'absolute', bottom:'-20%', left:'-8%',
         width:'500px', height:'500px', borderRadius:'50%',
         background:'radial-gradient(circle, rgba(0,122,110,0.18) 0%, transparent 65%)',
         pointerEvents:'none',
+        zIndex: 1,
       }}/>
 
-      <div className="section-wrap">
+      <div className="section-wrap" style={{ position: 'relative', zIndex: 2 }}>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'80px', alignItems:'center' }}>
 
           {/* Left */}

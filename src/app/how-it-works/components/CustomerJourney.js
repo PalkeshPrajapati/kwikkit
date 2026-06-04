@@ -7,6 +7,7 @@ function PhoneFrame({ src, alt }) {
   return (
     <div style={{
       width: '220px', margin: '0 auto',
+      position: 'relative',
       background: 'linear-gradient(160deg, #1e3330 0%, #0c1b19 100%)',
       borderRadius: '46px', padding: '11px',
       boxShadow: '0 40px 80px rgba(0,95,87,0.18), 0 0 0 1px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.08)',
@@ -113,7 +114,7 @@ export default function CustomerJourney() {
             const textFirst = i % 2 === 0;
 
             const textBlock = (
-              <div className={textFirst ? 'reveal-left' : 'reveal-right'} style={{ flex: 1 }}>
+              <div className={`${textFirst ? 'reveal-left' : 'reveal-right'} step-text`} style={{ flex: 1 }}>
                 {/* Step badge */}
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(0,95,87,0.07)', border: '1px solid rgba(0,95,87,0.12)', borderRadius: '100px', padding: '5px 14px', marginBottom: '16px' }}>
                   <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--green)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Step {step.num}</span>
@@ -124,7 +125,7 @@ export default function CustomerJourney() {
                   {step.num}
                 </div>
 
-                <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(26px, 3vw, 38px)', letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '18px', lineHeight: '1.1' }}>
+                <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(20px, 3vw, 38px)', letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '18px', lineHeight: '1.1' }}>
                   {step.title}
                 </h3>
                 <p style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--text-muted)', maxWidth: '400px' }}>
@@ -134,7 +135,7 @@ export default function CustomerJourney() {
             );
 
             const visualBlock = (
-              <div className={textFirst ? 'reveal-right' : 'reveal-left'} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className={`${textFirst ? 'reveal-right' : 'reveal-left'} step-visual`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ position: 'relative' }}>
                   {/* glow behind visual */}
                   <div style={{ position: 'absolute', inset: '-40px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,95,87,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -159,7 +160,12 @@ export default function CustomerJourney() {
             grid-template-columns: 1fr !important;
             gap: 48px !important;
           }
-          .customer-step > div:last-child { order: -1; }
+          .step-text {
+            order: 1 !important;
+          }
+          .step-visual {
+            order: 2 !important;
+          }
         }
       `}</style>
     </section>

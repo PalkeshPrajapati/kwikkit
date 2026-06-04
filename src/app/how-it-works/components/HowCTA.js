@@ -40,7 +40,7 @@ export default function HowCTA() {
             <span style={{ display: 'inline-block', background: 'rgba(255,229,0,0.12)', border: '1px solid rgba(255,229,0,0.25)', borderRadius: '100px', padding: '5px 16px', fontSize: '11px', fontWeight: '700', color: 'var(--yellow)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '24px' }}>
               Ready to Start?
             </span>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(32px, 4.5vw, 58px)', letterSpacing: '-0.035em', color: 'var(--cream)', lineHeight: '1.05', marginBottom: '16px' }}>
+            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(24px, 4.5vw, 58px)', letterSpacing: '-0.035em', color: 'var(--cream)', lineHeight: '1.05', marginBottom: '16px' }}>
               Ready to get started?
             </h2>
             <p style={{ fontSize: '17px', lineHeight: '1.7', color: 'rgba(253,248,242,0.55)', maxWidth: '440px', margin: '0 auto 48px' }}>
