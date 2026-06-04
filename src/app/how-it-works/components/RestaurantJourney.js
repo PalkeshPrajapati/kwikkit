@@ -46,7 +46,7 @@ export default function RestaurantJourney() {
             <span style={{ display: 'inline-block', background: 'rgba(255,229,0,0.1)', border: '1px solid rgba(255,229,0,0.22)', borderRadius: '100px', padding: '5px 16px', fontSize: '11px', fontWeight: '700', color: 'var(--yellow)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '20px' }}>
               For Restaurants
             </span>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(32px, 3.8vw, 52px)', letterSpacing: '-0.035em', color: 'var(--cream)', lineHeight: '1.05', marginBottom: '20px' }}>
+            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: '800', fontSize: 'clamp(24px, 3.8vw, 52px)', letterSpacing: '-0.035em', color: 'var(--cream)', lineHeight: '1.05', marginBottom: '20px' }}>
               Go live on Kwikkit<br />
               <span style={{ background: 'linear-gradient(90deg, var(--yellow) 0%, #fffab0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>in 24 hours.</span>
             </h2>

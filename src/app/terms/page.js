@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Mail, Phone } from 'lucide-react';
+import Image from 'next/image';
+import { Mail, Phone, List, X } from 'lucide-react';
 
 const sections = [
   { id: 'introduction', label: '1. Introduction' },
@@ -21,6 +22,46 @@ const sections = [
 
 export default function TermsPage() {
   const [activeSection, setActiveSection] = useState('introduction');
+  const [loaded, setLoaded] = useState(false);
+  const [showFloatingBtn, setShowFloatingBtn] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 80);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth <= 900) {
+        if (window.scrollY > 350) {
+          setShowFloatingBtn(true);
+        } else {
+          setShowFloatingBtn(false);
+        }
+      } else {
+        setShowFloatingBtn(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const observerOptions = {
@@ -69,54 +110,86 @@ export default function TermsPage() {
   return (
     <main style={{ background: '#FAF9F6', minHeight: '100vh', paddingBottom: '120px', fontFamily: "'Inter', sans-serif" }}>
 
-      {/* ─── Minimal, Professional Header ─── */}
-      <section style={{
-        background: '#FFFFFF',
-        padding: '130px 28px 60px',
-        borderBottom: '1px solid #E5E7EB',
-        position: 'relative'
-      }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'left' }}>
-          <span style={{
-            fontSize: '11px',
-            fontWeight: '700',
-            color: 'var(--green-dark)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            display: 'block',
-            marginBottom: '10px'
+      {/* ── Hero Section (Unified Style) ── */}
+      <section style={{ position: 'relative', minHeight: '75vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+
+        {/* ── Background ── */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <Image
+            src="/herobg/about-herobg.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+          />
+          {/* heavy dark overlay */}
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(3,11,10,0.8)' }} />
+          {/* grid pattern */}
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)', backgroundSize: '64px 64px', pointerEvents: 'none' }} />
+          {/* green glow bloom */}
+          <div style={{ position: 'absolute', bottom: '-60px', left: '50%', transform: 'translateX(-50%)', width: '1000px', height: '500px', background: 'radial-gradient(ellipse, rgba(0,95,87,0.18) 0%, transparent 68%)', pointerEvents: 'none' }} />
+          {/* yellow accent orb */}
+          <div style={{ position: 'absolute', top: '20%', right: '10%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(255,229,0,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        </div>
+
+        {/* ── Content ── */}
+        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '140px 28px 80px', maxWidth: '820px', margin: '0 auto', width: '100%' }}>
+
+          {/* Eyebrow */}
+          <div style={{
+            opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.7s ease 0.05s, transform 0.7s ease 0.05s',
+            display: 'inline-flex', alignItems: 'center', gap: '8px',
+            background: 'rgba(255,229,0,0.09)', border: '1px solid rgba(255,229,0,0.22)',
+            padding: '6px 18px', borderRadius: '100px', marginBottom: '32px',
+            fontSize: '11px', fontWeight: '700', color: 'var(--yellow)', letterSpacing: '0.1em', textTransform: 'uppercase'
           }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--yellow)', display: 'inline-block', animation: 'blinkY 1.6s ease infinite' }} />
             Legal Agreement
-          </span>
+          </div>
+
+          {/* Headline */}
           <h1 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: '800',
-            fontSize: 'clamp(32px, 4.5vw, 48px)',
-            color: '#111827',
-            lineHeight: '1.2',
-            letterSpacing: '-0.02em',
-            marginBottom: '18px'
+            opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s',
+            fontFamily: "'Syne', sans-serif", fontWeight: '800',
+            fontSize: 'clamp(28px, 5.8vw, 68px)', lineHeight: '1.05', letterSpacing: '-0.03em',
+            color: 'var(--cream)', maxWidth: '980px', margin: '0 auto 28px'
           }}>
-            Terms and Conditions
+            Terms & <span style={{
+              background: 'linear-gradient(90deg, var(--yellow) 0%, #fffaaa 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>Conditions</span>
           </h1>
 
+          {/* Metadata info */}
           <div style={{
+            opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.7s ease 0.28s, transform 0.7s ease 0.28s',
             display: 'flex',
+            justifyContent: 'center',
             gap: '24px',
             flexWrap: 'wrap',
-            fontSize: '13.5px',
-            color: '#6B7280',
-            fontWeight: '500'
+            fontSize: '14px',
+            color: 'rgba(253,248,242,0.5)',
+            fontWeight: '600',
+            fontFamily: "'Syne', sans-serif",
+            letterSpacing: '0.01em',
           }}>
-            <span>Last Updated: <strong>January 28, 2026</strong></span>
-            <span style={{ color: '#E5E7EB' }}>|</span>
-            <span>Company: <strong>Kwikkit / Aushadhiya Foods Pvt. Ltd.</strong></span>
+            <span>Last Updated: <strong style={{ color: 'var(--yellow)' }}>January 28, 2026</strong></span>
+            <span>•</span>
+            <span>Company: <strong style={{ color: 'var(--cream)' }}>Kwikkit / Aushadhiya Foods Pvt. Ltd.</strong></span>
           </div>
         </div>
+
+        <style>{`
+          @keyframes blinkY { 0%,100%{opacity:1} 50%{opacity:0.25} }
+        `}</style>
       </section>
 
       {/* ─── Two-Column Content Grid ─── */}
-      <section style={{ maxWidth: '1100px', margin: '50px auto 0', padding: '0 28px' }}>
+      <section className="terms-container" style={{ maxWidth: '1100px', margin: '50px auto 0', padding: '0 28px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '260px 1fr',
@@ -145,13 +218,14 @@ export default function TermsPage() {
               Sections
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <div className="terms-sidebar-list">
               {sections.map((sec) => {
                 const isActive = activeSection === sec.id;
                 return (
                   <button
                     key={sec.id}
                     onClick={() => handleSidebarClick(sec.id)}
+                    className={isActive ? 'active' : ''}
                     style={{
                       all: 'unset',
                       cursor: 'pointer',
@@ -164,18 +238,6 @@ export default function TermsPage() {
                       background: isActive ? '#F3F4F6' : 'transparent',
                       transition: 'all 0.2s ease',
                       textAlign: 'left'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.color = '#374151';
-                        e.currentTarget.style.borderLeftColor = '#D1D5DB';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.color = '#6B7280';
-                        e.currentTarget.style.borderLeftColor = 'transparent';
-                      }
                     }}
                   >
                     {sec.label}
@@ -396,45 +458,185 @@ export default function TermsPage() {
           </article>
         </div>
       </section>
+      {/* ─── Floating Menu Trigger Button (Mobile Only) ─── */}
+      <button
+        onClick={() => setIsMobileMenuOpen(true)}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          left: '50%',
+          transform: showFloatingBtn ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(100px)',
+          opacity: showFloatingBtn ? 1 : 0,
+          pointerEvents: showFloatingBtn ? 'auto' : 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: 'rgba(19, 26, 25, 0.92)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 229, 0, 0.25)',
+          borderRadius: '100px',
+          padding: '12px 22px',
+          color: 'var(--cream)',
+          fontWeight: '700',
+          fontSize: '13px',
+          fontFamily: "'Syne', sans-serif",
+          boxShadow: '0 10px 32px rgba(0, 0, 0, 0.35)',
+          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          zIndex: 999,
+          cursor: 'pointer',
+        }}
+        className="terms-mobile-fab"
+      >
+        <List size={16} style={{ color: 'var(--yellow)' }} />
+        <span>Sections</span>
+        <span style={{ color: 'rgba(253, 248, 242, 0.3)', margin: '0 2px' }}>|</span>
+        <span style={{ color: 'var(--yellow)', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {sections.find(s => s.id === activeSection)?.label.split('. ')[1] || 'Select'}
+        </span>
+      </button>
+
+      {/* ─── Bottom Sheet Drawer Menu Backdrop (Mobile Only) ─── */}
+      <div
+        onClick={() => setIsMobileMenuOpen(false)}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(3, 11, 10, 0.65)',
+          backdropFilter: 'blur(4px)',
+          opacity: isMobileMenuOpen ? 1 : 0,
+          pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
+          transition: 'opacity 0.3s ease',
+          zIndex: 1000,
+        }}
+      />
+
+      {/* ─── Bottom Sheet Drawer Menu Container (Mobile Only) ─── */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: '#FAF9F6',
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
+          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.2)',
+          transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(100%)',
+          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          zIndex: 1001,
+          maxHeight: '75vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Header / Drag Handle */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 16px 0' }}>
+          <div style={{ width: '36px', height: '4px', background: '#D1D5DB', borderRadius: '2px', marginBottom: '12px' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingBottom: '12px', borderBottom: '1px solid #E5E7EB' }}>
+            <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: '700', fontSize: '16px', color: '#111827', margin: 0 }}>
+              Table of Contents
+            </h3>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                all: 'unset',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: '#E5E7EB',
+                color: '#374151',
+              }}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable list */}
+        <div style={{ overflowY: 'auto', padding: '16px 16px 32px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {sections.map((sec) => {
+            const isActive = activeSection === sec.id;
+            return (
+              <button
+                key={sec.id}
+                onClick={() => {
+                  handleSidebarClick(sec.id);
+                  setIsMobileMenuOpen(false);
+                }}
+                style={{
+                  all: 'unset',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: isActive ? '#E6F0EE' : 'transparent',
+                  color: isActive ? 'var(--green)' : '#374151',
+                  fontWeight: isActive ? '700' : '500',
+                  fontSize: '14px',
+                  transition: 'all 0.2s ease',
+                  border: isActive ? '1px solid rgba(0, 95, 87, 0.15)' : '1px solid transparent',
+                }}
+                className={`terms-drawer-item ${isActive ? 'active' : ''}`}
+              >
+                <span>{sec.label}</span>
+                {isActive && (
+                  <span style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: 'var(--green)',
+                  }} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Responsive Media Styles */}
-      <style jsx global>{`
+      <style>{`
+        .terms-sidebar-list {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .terms-sidebar button {
+          border-left: 2px solid transparent;
+          transition: all 0.2s ease;
+        }
+        @media (hover: hover) {
+          .terms-sidebar button:not(.active):hover {
+            color: #374151 !important;
+            border-left-color: #D1D5DB !important;
+          }
+        }
         @media (max-width: 900px) {
           .terms-grid {
             grid-template-columns: 1fr !important;
             gap: 30px !important;
           }
           .terms-sidebar {
-            position: sticky !important;
-            top: 60px !important;
-            z-index: 100 !important;
-            max-height: 50px !important;
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-            white-space: nowrap !important;
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center !important;
-            gap: 8px !important;
-            padding: 8px 16px !important;
-            border-radius: 8px !important;
-            background: #FFFFFF !important;
-            border: 1px solid #E5E7EB !important;
-          }
-          .terms-sidebar h3 {
             display: none !important;
           }
-          .terms-sidebar button {
-            display: inline-block !important;
-            padding: 6px 12px !important;
-            font-size: 12px !important;
-            border-left: none !important;
-            border-bottom: 2px solid transparent !important;
-            border-radius: 0 !important;
-            background: transparent !important;
+          .terms-drawer-item:active {
+            background-color: #E6F0EE !important;
+          }
+          .terms-mobile-fab:active {
+            transform: translateX(-50%) scale(0.95) !important;
           }
         }
         @media (max-width: 600px) {
+          .terms-container {
+            padding: 0 16px !important;
+            margin-top: 24px !important;
+          }
           .terms-split {
             grid-template-columns: 1fr !important;
             gap: 20px !important;

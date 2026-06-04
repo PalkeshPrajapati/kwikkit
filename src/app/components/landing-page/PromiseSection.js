@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 export default function PromiseSection() {
   const ref = useRef(null);
@@ -19,18 +20,36 @@ export default function PromiseSection() {
       position: 'relative',
       overflow: 'hidden',
     }}>
+      {/* ── Background Image ── */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <Image
+          src="/landing/promise-bg.png"
+          alt="Fresh culinary ingredients"
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'center center' }}
+          sizes="100vw"
+        />
+        {/* Dark overlay for readability */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(135deg, rgba(0, 61, 55, 0.85) 0%, rgba(0, 40, 36, 0.78) 100%)',
+        }} />
+      </div>
+
       {/* animated gradient blob */}
       <div style={{
         position:'absolute', top:'-40%', right:'-10%',
         width:'700px', height:'700px', borderRadius:'50%',
         background:'radial-gradient(circle, rgba(0,154,141,0.18) 0%, transparent 65%)',
         pointerEvents:'none',
+        zIndex: 1,
       }}/>
       <div style={{
         position:'absolute', bottom:'-30%', left:'-8%',
         width:'500px', height:'500px', borderRadius:'50%',
         background:'radial-gradient(circle, rgba(255,229,0,0.07) 0%, transparent 65%)',
         pointerEvents:'none',
+        zIndex: 1,
       }}/>
 
       {/* grid lines */}
@@ -38,9 +57,10 @@ export default function PromiseSection() {
         position:'absolute', inset:0,
         backgroundImage:'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
         backgroundSize:'64px 64px', pointerEvents:'none',
+        zIndex: 1,
       }}/>
 
-      <div className="section-wrap" style={{ padding:'100px 28px' }}>
+      <div className="section-wrap" style={{ padding:'100px 28px', position: 'relative', zIndex: 2 }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'60px', flexWrap:'wrap' }}>
 
           {/* Left */}

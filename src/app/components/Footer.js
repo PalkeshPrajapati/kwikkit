@@ -44,9 +44,9 @@ const cols = [
     heading: 'Product',
     links: [
       { l: 'Home', h: '/' },
-      { l: 'Why Kwikkit', h: '/why-kwikkit' },
+      { l: 'Why Kwikkit', h: '/#why' },
       { l: 'How It Works', h: '/how-it-works' },
-      { l: 'Download App', h: '/download' },
+      { l: 'Download App', h: '/#download' },
       { l: 'Blog', h: '/blog' },
     ],
   },
@@ -54,17 +54,17 @@ const cols = [
     heading: 'For Restaurants',
     links: [
       { l: 'Partner With Us', h: '/restaurants' },
-      { l: 'Zero Commission', h: '/zero-commission' },
-      { l: 'Easy Onboarding', h: '/easy-onboarding' },
-      { l: 'Savings Calculator', h: '/savings-calculator' },
+      { l: 'Zero Commission', h: '/restaurants#zero-commission' },
+      { l: 'Easy Onboarding', h: '/restaurants#onboarding' },
+      { l: 'Savings Calculator', h: '/restaurants#calculator' },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { l: 'About Us', h: '/story' },
-      { l: 'Our Mission', h: '/mission' },
-      { l: 'Careers', h: '/contact' },
+      { l: 'About Us', h: '/about' },
+      { l: 'Our Mission', h: '/about#mission' },
+      { l: 'Careers', h: '/careers' },
       { l: 'Contact Us', h: '/contact' },
     ],
   },
@@ -73,6 +73,8 @@ const cols = [
     links: [
       { l: 'Terms & Conditions', h: '/terms' },
       { l: 'Privacy Policy', h: '/terms' },
+      { l: 'FSSAI License', h: '/legal/fssai.pdf' },
+      { l: 'ISO Certification', h: '/legal/iso.pdf' },
     ],
   },
 ];
@@ -223,17 +225,35 @@ export default function Footer() {
                 {col.heading}
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {col.links.map(link => (
-                  <Link
-                    key={link.l}
-                    href={link.h}
-                    style={linkStyle}
-                    onMouseEnter={e => e.currentTarget.style.color = 'var(--cream)'}
-                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(253,248,242,0.45)'}
-                  >
-                    {link.l}
-                  </Link>
-                ))}
+                {col.links.map(link => {
+                  const isExternal = link.h.endsWith('.pdf');
+                  if (isExternal) {
+                    return (
+                      <a
+                        key={link.l}
+                        href={link.h}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={linkStyle}
+                        onMouseEnter={e => e.currentTarget.style.color = 'var(--cream)'}
+                        onMouseLeave={e => e.currentTarget.style.color = 'rgba(253,248,242,0.45)'}
+                      >
+                        {link.l}
+                      </a>
+                    );
+                  }
+                  return (
+                    <Link
+                      key={link.l}
+                      href={link.h}
+                      style={linkStyle}
+                      onMouseEnter={e => e.currentTarget.style.color = 'var(--cream)'}
+                      onMouseLeave={e => e.currentTarget.style.color = 'rgba(253,248,242,0.45)'}
+                    >
+                      {link.l}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -254,7 +274,7 @@ export default function Footer() {
               &copy; {year} Aushadhiya Foods Pvt. Ltd. All rights reserved.
             </p>
             <div style={{ display: 'flex', gap: '20px' }}>
-              {[{ l: 'Privacy Policy', h: '#' }, { l: 'Terms', h: '#' }, { l: 'Careers', h: '#contact' }].map(item => (
+              {[{ l: 'Privacy Policy', h: '/terms' }, { l: 'Terms', h: '/terms' }, { l: 'Careers', h: '/careers' }].map(item => (
                 <Link
                   key={item.l}
                   href={item.h}
@@ -269,8 +289,96 @@ export default function Footer() {
           </div>
 
           {/* Row 2 — legal details */}
-          <p style={{ fontSize: '11px', color: 'rgba(253,248,242,0.13)', fontWeight: '500', letterSpacing: '0.03em' }}>
-            CIN: U10100PB2025PTC000000 &nbsp;&middot;&nbsp; FSSAI Licensed &nbsp;&middot;&nbsp; Made with ♥ in Chandigarh
+          <p style={{
+            fontSize: '11px',
+            color: 'rgba(253,248,242,0.22)',
+            fontWeight: '500',
+            letterSpacing: '0.03em',
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '8px',
+            marginTop: '16px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.03)',
+            paddingTop: '16px'
+          }}>
+            <span>CIN: U10100PB2025PTC000000</span>
+            <span style={{ color: 'rgba(255,255,255,0.05)', margin: '0 2px' }}>•</span>
+            
+            <a
+              href="/legal/fssai.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                color: 'rgba(253, 248, 242, 0.65)',
+                fontSize: '11px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'all 0.25s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255, 229, 0, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 229, 0, 0.3)';
+                e.currentTarget.style.color = 'var(--yellow)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.color = 'rgba(253, 248, 242, 0.65)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981', display: 'inline-block', boxShadow: '0 0 6px #10B981' }} />
+              FSSAI Licensed
+            </a>
+
+            <span style={{ color: 'rgba(255,255,255,0.05)', margin: '0 2px' }}>•</span>
+
+            <a
+              href="/legal/iso.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                color: 'rgba(253, 248, 242, 0.65)',
+                fontSize: '11px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'all 0.25s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255, 229, 0, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 229, 0, 0.3)';
+                e.currentTarget.style.color = 'var(--yellow)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.color = 'rgba(253, 248, 242, 0.65)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981', display: 'inline-block', boxShadow: '0 0 6px #10B981' }} />
+              ISO Certified
+            </a>
+
+            <span style={{ color: 'rgba(255,255,255,0.05)', margin: '0 2px' }}>•</span>
+            <span>Made with ♥ in Chandigarh</span>
           </p>
 
         </div>

@@ -4,10 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const links = [
-  { label: 'Why Kwikkit', href: '/why-kwikkit' },
   { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Our Story', href: '/story' },
   { label: 'Restaurants', href: '/restaurants' },
+  { label: 'About Us', href: '/about' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -88,7 +87,7 @@ export default function Navbar() {
 
           {/* ── Right: CTA + hamburger ── */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Link href="/download"
+            <Link href="/#download"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '7px',
                 background: 'var(--yellow)', color: 'var(--green-dark)',
@@ -146,9 +145,9 @@ export default function Navbar() {
             onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
           >{l.label}</Link>
         ))}
-        <a href="#download" className="btn btn-yellow" style={{ marginTop: '16px' }} onClick={() => setMenuOpen(false)}>
+        <Link href="/#download" className="btn btn-yellow" style={{ marginTop: '16px' }} onClick={() => setMenuOpen(false)}>
           Download App
-        </a>
+        </Link>
       </div>
 
       <style>{`
