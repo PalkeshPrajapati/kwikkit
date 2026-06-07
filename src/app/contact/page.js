@@ -27,6 +27,8 @@ export default function ContactPage() {
   const [loaded, setLoaded] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,9 +50,10 @@ export default function ContactPage() {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
+    setSubmitError('');
 
     if (!formData.name.trim()) newErrors.name = 'Full Name is required';
     if (!formData.email.trim()) {
@@ -71,7 +74,29 @@ export default function ContactPage() {
       return;
     }
 
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: 'contact',
+          ...formData
+        })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Something went wrong. Please try again.');
+      }
+
+      setFormSubmitted(true);
+    } catch (err) {
+      setSubmitError(err.message || 'Failed to submit form. Please check your connection and try again.');
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -84,6 +109,8 @@ export default function ContactPage() {
     });
     setFormSubmitted(false);
     setErrors({});
+    setSubmitError('');
+    setIsSubmitting(false);
   };
 
   return (
@@ -398,19 +425,38 @@ export default function ContactPage() {
                   </div>
 
                   {/* Submit */}
+                  {submitError && (
+                    <div style={{
+                      color: '#ef4444',
+                      fontSize: '14px',
+                      background: 'rgba(239, 68, 68, 0.08)',
+                      border: '1px solid rgba(239, 68, 68, 0.2)',
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      marginTop: '8px'
+                    }}>
+                      <AlertCircle size={16} />
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
+                    disabled={isSubmitting}
                     style={{
-                      background: 'var(--green-dark)', color: 'var(--cream)',
+                      background: isSubmitting ? '#a3b8b5' : 'var(--green-dark)', color: 'var(--cream)',
                       padding: '16px 28px', borderRadius: '100px',
-                      fontWeight: '700', fontSize: '15px', border: 'none', cursor: 'pointer',
+                      fontWeight: '700', fontSize: '15px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer',
                       transition: 'background-color 0.2s ease, transform 0.2s ease',
                       marginTop: '8px', boxShadow: '0 6px 20px rgba(0, 61, 55, 0.15)',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--green)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--green-dark)'; e.currentTarget.style.transform = ''; }}
+                    onMouseEnter={e => { if (!isSubmitting) { e.currentTarget.style.backgroundColor = 'var(--green)'; e.currentTarget.style.transform = 'translateY(-2px)'; } }}
+                    onMouseLeave={e => { if (!isSubmitting) { e.currentTarget.style.backgroundColor = 'var(--green-dark)'; e.currentTarget.style.transform = ''; } }}
                   >
-                    Send Message
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </button>
 
                 </form>
@@ -519,8 +565,8 @@ export default function ContactPage() {
                   <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '750', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px' }}>Head Office</div>
                   <h5 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '6px' }}>Kwikkit Headquarters</h5>
                   <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.5', margin: 0 }}>
-                    Chandigarh Tricity,<br />
-                    Punjab & Haryana, India
+                    Gurgaon,<br />
+                    Haryana, India
                   </p>
                 </div>
               </div>

@@ -4,11 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const links = [
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Restaurants', href: '/restaurants' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'How It Works', desc: 'Simple steps to get food delivered', href: '/how-it-works' },
+  { label: 'Restaurants', desc: 'Partner with us and keep 100% revenue', href: '/restaurants' },
+  { label: 'About Us', desc: 'Our mission and zero-commission story', href: '/about' },
+  { label: 'Blog', desc: 'Latest updates and food delivery insights', href: '/blog' },
+  { label: 'Contact', desc: 'Have questions? Get in touch with us', href: '/contact' },
 ];
 
 export default function Navbar() {
@@ -125,35 +125,149 @@ export default function Navbar() {
       {/* ── Mobile fullscreen menu ── */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 999,
-        background: 'var(--dark)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '32px',
+        background: '#040909',
+        display: 'flex', flexDirection: 'column',
+        justifyContent: 'flex-start',
+        padding: '110px 24px 32px',
         transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
         transition: 'transform 0.45s cubic-bezier(.77,0,.175,1)',
+        overflowY: 'auto',
+        overflowX: 'hidden', // Prevents horizontal scroll indicator
       }}>
-        {links.map((l, i) => (
-          <Link key={l.label} href={l.href}
-            onClick={() => setMenuOpen(false)}
-            style={{
-              color: 'var(--cream)', textDecoration: 'none',
-              fontFamily: "'Syne',sans-serif", fontSize: '32px', fontWeight: '800',
-              letterSpacing: '-0.04em',
-              opacity: menuOpen ? 1 : 0,
-              transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
-              transition: `opacity 0.45s ease ${i * 0.06 + 0.1}s, transform 0.45s ease ${i * 0.06 + 0.1}s`,
-            }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--yellow)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
-          >{l.label}</Link>
-        ))}
-        <Link href="/#download" className="btn btn-yellow" style={{ marginTop: '16px' }} onClick={() => setMenuOpen(false)}>
-          Download App
-        </Link>
+        {/* Background Gradients & Grids */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px)', backgroundSize: '56px 56px', pointerEvents: 'none', opacity: menuOpen ? 0.8 : 0, transition: 'opacity 0.6s ease' }} />
+        <div style={{ position: 'absolute', top: '10%', left: '-30%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(0,95,87,0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '15%', right: '-30%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(255,229,0,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+        {/* Content Wrapper */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          flexGrow: 1, // Stretches wrapper to fill remaining viewport height
+          width: '100%',
+          maxWidth: '480px',
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 2,
+        }}>
+          {/* Links List Container */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '36px', // Larger gap to separate options
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: 'auto 0', // Dynamically centers vertically in the space
+            paddingBottom: '40px', // Ensures a safe margin above CTA
+            paddingTop: '20px'
+          }}>
+            {links.map((l, i) => (
+              <Link key={l.label} href={l.href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  textDecoration: 'none',
+                  opacity: menuOpen ? 1 : 0,
+                  transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
+                  transition: `opacity 0.4s ease ${i * 0.05 + 0.1}s, transform 0.4s ease ${i * 0.05 + 0.1}s`,
+                  outline: 'none',
+                  textAlign: 'center',
+                }}
+                className="mobile-nav-item"
+              >
+                {/* Text Group */}
+                <span style={{
+                  color: 'var(--cream)',
+                  fontFamily: "'Syne',sans-serif",
+                  fontSize: '22px',
+                  fontWeight: '800',
+                  letterSpacing: '-0.02em',
+                  transition: 'color 0.2s ease',
+                }} className="mobile-nav-label">
+                  {l.label}
+                </span>
+                <span style={{
+                  color: 'rgba(253, 248, 242, 0.45)',
+                  fontSize: '12.5px',
+                  fontWeight: '450',
+                  lineHeight: '1.4',
+                  maxWidth: '280px', // Restrict width so it wraps nicely in center
+                }}>
+                  {l.desc}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Bottom Section */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '24px',
+            width: '100%',
+            opacity: menuOpen ? 1 : 0,
+            transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.4s ease 0.4s, transform 0.4s ease 0.4s',
+          }}>
+            {/* CTA */}
+            <Link href="/#download"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                background: 'var(--yellow)',
+                color: 'var(--green-dark)',
+                padding: '14px 28px',
+                borderRadius: '100px',
+                fontWeight: '800',
+                fontSize: '14px',
+                fontFamily: "'Syne', sans-serif",
+                textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(255, 229, 0, 0.25)',
+                textAlign: 'center',
+              }}
+              onClick={() => setMenuOpen(false)}
+            >
+              Download App
+            </Link>
+
+            {/* Socials & Info */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px',
+              width: '100%',
+              borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+              paddingTop: '20px'
+            }}>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <a href="https://www.instagram.com/kwikkitindia/" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(253, 248, 242, 0.4)', textDecoration: 'none', fontSize: '12px', fontWeight: '500' }}>Instagram</a>
+                <a href="https://x.com/kwikkitindia" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(253, 248, 242, 0.4)', textDecoration: 'none', fontSize: '12px', fontWeight: '500' }}>Twitter</a>
+                <a href="https://www.linkedin.com/in/kwikkitindia" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(253, 248, 242, 0.4)', textDecoration: 'none', fontSize: '12px', fontWeight: '500' }}>LinkedIn</a>
+              </div>
+              <p style={{ margin: 0, fontSize: '11px', color: 'rgba(253, 248, 242, 0.25)', fontWeight: '500' }}>
+                info@kwikkit.in &nbsp;&middot;&nbsp; +91 86995 55046
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <style>{`
         @media (max-width: 840px) {
           .nav-links { display: none !important; }
           .nav-hamburger { display: flex !important; }
+          .mobile-nav-item:active .mobile-nav-label {
+            color: var(--yellow) !important;
+          }
         }
       `}</style>
     </>

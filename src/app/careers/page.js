@@ -40,6 +40,10 @@ export default function CareersPage() {
   const [selectedRole, setSelectedRole] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [cvFile, setCvFile] = useState(null);
+  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -98,9 +102,28 @@ export default function CareersPage() {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        setErrors(prev => ({ ...prev, resume: 'Please upload a PDF file' }));
+        setCvFile(null);
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) { // 5MB
+        setErrors(prev => ({ ...prev, resume: 'File size must be under 5MB' }));
+        setCvFile(null);
+        return;
+      }
+      setCvFile(file);
+      setErrors(prev => ({ ...prev, resume: '' }));
+    }
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
+    setSubmitError('');
 
     if (!formData.fullName.trim()) newErrors.fullName = 'Full Name is required';
     if (!formData.email.trim()) {
@@ -109,6 +132,7 @@ export default function CareersPage() {
       newErrors.email = 'Please enter a valid email address';
     }
     if (!selectedRole) newErrors.role = 'Please select a role';
+    if (!cvFile) newErrors.resume = 'Please upload your CV / Resume';
     if (!formData.whyKwikkit.trim()) {
       newErrors.whyKwikkit = 'Please tell us why you want to join Kwikkit';
     } else if (formData.whyKwikkit.trim().split(/\s+/).length < 10) {
@@ -121,7 +145,40 @@ export default function CareersPage() {
       return;
     }
 
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      // Package form data into a multipart FormData request
+      const submitData = new FormData();
+      submitData.append('formType', 'career');
+      submitData.append('role', selectedRole);
+      submitData.append('fullName', formData.fullName);
+      submitData.append('email', formData.email);
+      submitData.append('phone', formData.phone || '');
+      submitData.append('portfolio', formData.portfolio || '');
+      submitData.append('linkedin', formData.linkedin || '');
+      submitData.append('whyKwikkit', formData.whyKwikkit);
+      if (cvFile) {
+        submitData.append('resume', cvFile);
+      }
+
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        body: submitData
+        // Note: Do not set Content-Type header when posting FormData, the browser sets it automatically with boundary
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Something went wrong. Please try again.');
+      }
+
+      setFormSubmitted(true);
+    } catch (err) {
+      setSubmitError(err.message || 'Failed to submit application. Please try again.');
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -134,8 +191,12 @@ export default function CareersPage() {
       whyKwikkit: '',
     });
     setSelectedRole('');
+    setCvFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
     setFormSubmitted(false);
     setErrors({});
+    setSubmitError('');
+    setIsSubmitting(false);
   };
 
   return (
@@ -690,6 +751,80 @@ export default function CareersPage() {
                   </div>
                 </div>
 
+                {/* File Upload: CV/Resume */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '750', color: 'var(--text-primary)', marginBottom: '8px', textTransform: 'uppercase' }}>
+                    Upload CV / Resume (PDF) *
+                  </label>
+                  <div 
+                    style={{
+                      position: 'relative',
+                      border: errors.resume ? '2px dashed #ef4444' : '2px dashed rgba(0, 95, 87, 0.2)',
+                      borderRadius: '16px',
+                      padding: '28px 24px',
+                      textAlign: 'center',
+                      background: 'var(--cream-dark)',
+                      cursor: 'pointer',
+                      transition: 'border-color 0.2s ease, background-color 0.2s ease',
+                    }}
+                    onMouseEnter={e => { if (!errors.resume) e.currentTarget.style.borderColor = 'var(--green)'; }}
+                    onMouseLeave={e => { if (!errors.resume) e.currentTarget.style.borderColor = 'rgba(0, 95, 87, 0.2)'; }}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                      style={{ display: 'none' }}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <FileText size={32} style={{ color: cvFile ? 'var(--green)' : 'rgba(0, 95, 87, 0.45)', transition: 'color 0.2s' }} />
+                      {cvFile ? (
+                        <div>
+                          <span style={{ fontSize: '14px', fontWeight: '750', color: 'var(--text-primary)', display: 'block', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: '0 auto' }}>
+                            {cvFile.name}
+                          </span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>
+                            {Math.round(cvFile.size / 1024)} KB
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCvFile(null);
+                              if (fileInputRef.current) fileInputRef.current.value = '';
+                            }}
+                            style={{
+                              all: 'unset',
+                              display: 'inline-block',
+                              marginTop: '10px',
+                              fontSize: '12px',
+                              color: '#ef4444',
+                              fontWeight: '750',
+                              cursor: 'pointer',
+                              borderBottom: '1px solid #ef4444',
+                              lineHeight: '1.2'
+                            }}
+                          >
+                            Remove file
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <span style={{ fontSize: '14px', fontWeight: '750', color: 'var(--text-primary)', display: 'block' }}>
+                            Click to upload your resume
+                          </span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>
+                            PDF formats only (Max size: 5MB)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {errors.resume && <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} />{errors.resume}</div>}
+                </div>
+
                 {/* Textarea: Why Kwikkit */}
                 <div>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '750', color: 'var(--text-primary)', marginBottom: '8px', textTransform: 'uppercase' }}>
@@ -717,26 +852,45 @@ export default function CareersPage() {
                   {errors.whyKwikkit && <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} />{errors.whyKwikkit}</div>}
                 </div>
 
-                {/* Submit Button */}
+                {submitError && (
+                  <div style={{
+                    color: '#ef4444',
+                    fontSize: '14px',
+                    background: 'rgba(239, 68, 68, 0.08)',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginTop: '8px',
+                    marginBottom: '12px'
+                  }}>
+                    <AlertCircle size={16} />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   style={{
-                    background: 'var(--green-dark)',
+                    background: isSubmitting ? '#a3b8b5' : 'var(--green-dark)',
                     color: 'var(--cream)',
                     padding: '16px 28px',
                     borderRadius: '100px',
                     fontWeight: '700',
                     fontSize: '15px',
                     border: 'none',
-                    cursor: 'pointer',
+                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
                     transition: 'background-color 0.2s ease, transform 0.2s ease',
                     marginTop: '12px',
                     boxShadow: '0 6px 20px rgba(0, 61, 55, 0.15)',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--green)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--green-dark)'; e.currentTarget.style.transform = ''; }}
+                  onMouseEnter={e => { if (!isSubmitting) { e.currentTarget.style.backgroundColor = 'var(--green)'; e.currentTarget.style.transform = 'translateY(-2px)'; } }}
+                  onMouseLeave={e => { if (!isSubmitting) { e.currentTarget.style.backgroundColor = 'var(--green-dark)'; e.currentTarget.style.transform = ''; } }}
                 >
-                  Submit Application
+                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </button>
               </form>
             ) : (

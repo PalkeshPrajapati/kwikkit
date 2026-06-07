@@ -555,6 +555,8 @@ function TestimonialsSection() {
 function PartnerFormSection({ formRef }) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [formData, setFormData] = useState({ restaurantName: '', ownerName: '', phone: '', address: '', cuisineType: '', currentPlatform: '', additionalInfo: '' });
 
   const handleChange = (e) => {
@@ -563,16 +565,56 @@ function PartnerFormSection({ formRef }) {
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = {};
+    setSubmitError('');
     if (!formData.restaurantName.trim()) errs.restaurantName = 'Restaurant Name is required';
     if (!formData.ownerName.trim()) errs.ownerName = 'Owner Name is required';
     if (!formData.phone.trim()) errs.phone = 'Phone Number is required';
     else if (!/^[6-9]\d{9}$/.test(formData.phone.trim().replace(/[\s-+]/g, '').slice(-10))) errs.phone = 'Please enter a valid 10-digit mobile number';
     if (!formData.address.trim()) errs.address = 'Restaurant Address is required';
     if (Object.keys(errs).length > 0) { setErrors(errs); formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-    setFormSubmitted(true);
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: 'partner',
+          ...formData
+        })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Something went wrong. Please try again.');
+      }
+
+      setFormSubmitted(true);
+    } catch (err) {
+      setSubmitError(err.message || 'Failed to submit partnership request. Please try again.');
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      restaurantName: '',
+      ownerName: '',
+      phone: '',
+      address: '',
+      cuisineType: '',
+      currentPlatform: '',
+      additionalInfo: ''
+    });
+    setFormSubmitted(false);
+    setErrors({});
+    setSubmitError('');
+    setIsSubmitting(false);
   };
 
   const inputStyle = (err) => ({ width: '100%', padding: '14px 18px', borderRadius: '12px', border: err ? '1px solid #ef4444' : '1px solid rgba(0,95,87,0.15)', background: 'var(--cream-dark)', fontSize: '15px', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box' });
@@ -625,10 +667,29 @@ function PartnerFormSection({ formRef }) {
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '750', color: 'var(--text-primary)', marginBottom: '8px', textTransform: 'uppercase' }}>Anything else?</label>
                 <textarea name="additionalInfo" rows={3} placeholder="Any questions or additional context" value={formData.additionalInfo} onChange={handleChange} style={{ ...inputStyle(false), resize: 'vertical', lineHeight: '1.6' }} />
               </div>
-              <button type="submit" style={{ background: 'var(--green-dark)', color: 'var(--cream)', padding: '16px 28px', borderRadius: '100px', fontWeight: '700', fontSize: '15px', border: 'none', cursor: 'pointer', transition: 'background 0.2s ease, transform 0.2s ease', marginTop: '8px', boxShadow: '0 6px 20px rgba(0,61,55,0.15)' }}
-                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--green)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--green-dark)'; e.currentTarget.style.transform = ''; }}>
-                Submit Partnership Request
+
+              {submitError && (
+                <div style={{
+                  color: '#ef4444',
+                  fontSize: '14px',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginTop: '8px'
+                }}>
+                  <AlertCircle size={16} />
+                  <span>{submitError}</span>
+                </div>
+              )}
+
+              <button type="submit" disabled={isSubmitting} style={{ background: isSubmitting ? '#a3b8b5' : 'var(--green-dark)', color: 'var(--cream)', padding: '16px 28px', borderRadius: '100px', fontWeight: '700', fontSize: '15px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', transition: 'background 0.2s ease, transform 0.2s ease', marginTop: '8px', boxShadow: '0 6px 20px rgba(0,61,55,0.15)' }}
+                onMouseEnter={e => { if (!isSubmitting) { e.currentTarget.style.backgroundColor = 'var(--green)'; e.currentTarget.style.transform = 'translateY(-2px)'; } }}
+                onMouseLeave={e => { if (!isSubmitting) { e.currentTarget.style.backgroundColor = 'var(--green-dark)'; e.currentTarget.style.transform = ''; } }}>
+                {isSubmitting ? 'Submitting...' : 'Submit Partnership Request'}
               </button>
             </form>
           ) : (
@@ -640,7 +701,7 @@ function PartnerFormSection({ formRef }) {
               <p style={{ fontSize: '16px', color: 'var(--text-muted)', maxWidth: '400px', margin: '0 auto 28px', lineHeight: '1.6' }}>
                 Our partner manager will call you within 24 hours to walk you through the onboarding process.
               </p>
-              <button onClick={() => setFormSubmitted(false)} style={{ background: 'none', border: '1px solid rgba(0,95,87,0.2)', color: 'var(--green)', padding: '12px 28px', borderRadius: '100px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>
+              <button onClick={resetForm} style={{ background: 'none', border: '1px solid rgba(0,95,87,0.2)', color: 'var(--green)', padding: '12px 28px', borderRadius: '100px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>
                 Submit Another Request
               </button>
             </div>
