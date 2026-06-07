@@ -20,6 +20,10 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <meta name="developer" content="Palkesh Prajapati & Chetna Singh" />
+        <meta name="developer-github" content="https://github.com/PalkeshPrajapati & https://github.com/chetnasingh31" />
+        <meta name="publisher" content="Kwikkit" />
+        <meta name="copyright" content="© 2026 Kwikkit. All rights reserved." />
       </head>
       <body>
         <Navbar />
